@@ -27,8 +27,22 @@ app.on("ready", () => {
   );
 
   tray = new Tray(iconPath);
-  tray.setToolTip("This is my application.");
-  tray.on("click", () => {
-    mainWindow.show();
+  // tray.setToolTip("This is my application.");
+  tray.on("click", (event,bounds) => {
+    const {x,y}=bounds
+    const {height,width}=mainWindow.getBounds() 
+    console.log(y-height)
+    if(mainWindow.isVisible()){
+      mainWindow.hide()
+    }else{
+      const yposition=process.platform==='darwin'?y:y-height
+      mainWindow.setBounds({
+        x:x-width/2 ,
+        y:yposition,
+        height ,
+        width 
+      })
+      mainWindow.show();
+    }
   });
 });
